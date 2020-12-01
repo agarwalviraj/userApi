@@ -1,4 +1,5 @@
-const schema = {
+const mongoose = require("mongoose");
+const schemau = {
   name: "string",
   groupName: "string",
   role: "string",
@@ -12,4 +13,4 @@ const schema = {
   pals: "Number",
 };
 
-module.exports = schema;
+module.exports = mongoose.model("Users", schemau);

@@ -1,11 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const schema = require("./model/userSchema");
-const makeUser = require("./model/addUser");
+const cors = require("cors");
 require("dotenv").config();
-var app = express();
-
+const app = express();
+const users = require("./routes/updateUser");
+app.use(cors());
+app.use("*", cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(
@@ -13,33 +14,8 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
-const geny = mongoose.model("Users", schema);
-
-app.get("/users", (req, res) => {
-  console.log(req.query.amt);
-  geny
-    .find((err, foundUsers) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(foundUsers);
-      }
-    })
-    .limit(parseInt(req.query.amt));
-});
-
-app.post("/users", (req, res) => {
-  const newUser = new geny(makeUser(req));
-
-  newUser.save((err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send("Successfully added");
-    }
-  });
-});
+app.use("/users", users);
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log("Server started on sucessfully");
+  console.log("Server started sucessfully");
 });
